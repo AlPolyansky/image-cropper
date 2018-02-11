@@ -1,17 +1,18 @@
-const webpack = require('webpack');
-const path = require('path');
-const outputPath = path.resolve(__dirname,'./dist');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+// const webpack = require('webpack')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const folders = new (require('./webpack/webpack.path.js'))(__dirname)
+const front = folders.front
+const server = folders.server
 
 const webpackConfig = {
   entry: {
     app: [
-      path.resolve(__dirname, './src/index.js')
+      path.join(front.root, 'index.js')
     ]
   },
   output: {
-    path: outputPath,
+    path: server.files,
     filename: '[name].js'
   },
   module: {
@@ -34,30 +35,29 @@ const webpackConfig = {
       {
         test: /\.(gif|png|jpg|jpeg)$/,
         exclude: /(node_modules)/,
-        include: path.resolve(__dirname,'./src/assets'),
+        include: front.files,
         use: 'url-loader?limit=10000&name=assets/[name]-[hash].[ext ]'
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, './src/assets/index.html'),
+      template: path.join(front.files, 'index.html'),
       filename: 'index.html',
-      path: outputPath
+      path: server.files
     }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    //new webpack.NamedModulesPlugin(),
+    //new webpack.HotModuleReplacementPlugin()
   ],
-  devServer: {
-    contentBase: path.resolve(__dirname, './dist'),
-    port: 8080,
-    historyApiFallback: true,
-    inline: true,
-    hot: true,
-    host: '0.0.0.0',
-    clientLogLevel: "none"
-  }
-};
+  // devServer: {
+  //   contentBase: path.resolve(__dirname, './dist'),
+  //   port: 3000,
+  //   historyApiFallback: true,
+  //   inline: true,
+  //   hot: true,
+  //   host: '0.0.0.0',
+  //   clientLogLevel: 'none'
+  // }
+}
 
-
-module.exports = webpackConfig;
+module.exports = webpackConfig
